@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --color-brand: #22d3ee;
+  --color-brand-hover: #67e8f9;
+  --color-accent: #a78bfa;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  @apply antialiased text-slate-100 bg-slate-950;
+}
+
+::selection {
+  background-color: rgb(34 211 238 / 0.22);
+  color: inherit;
+}
+
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-[var(--color-brand)];
+}
