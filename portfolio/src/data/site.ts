@@ -46,6 +46,13 @@ export const SITE = {
       body: "Small reviewable changes, clear handoffs, and asking the awkward question early.",
     },
   ],
+  /** Cycled in the About terminal's "currently building" line. */
+  currentlyBuilding: [
+    "BayadRent — new landlord features",
+    "City Pulse — more livability signals",
+    "internal tools at ePrime",
+    "this portfolio, v3",
+  ],
   /** Second marquee ribbon: what you build, not what you use. */
   services: ["Internal tools", "Dashboards", "Admin workflows", "Full-stack apps", "Automation", "Shipping in slices"],
   skills: ["TypeScript", "React", "Node.js", "Tailwind CSS", "Git", "Python", "Next.js", "SQL", "C#", "CI/CD"] as const,

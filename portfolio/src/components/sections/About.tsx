@@ -1,13 +1,14 @@
 import { Section } from "../ui/Section";
 import { Reveal } from "../ui/Reveal";
 import { SkillIcon } from "../ui/skillIcons";
+import { StatusTerminal, type TerminalStat } from "../ui/StatusTerminal";
 import { SITE } from "../../data/site";
 import { PROJECTS } from "../../data/projects";
 
-const STATS = [
-  { value: String(PROJECTS.length).padStart(2, "0"), label: "Products shipped" },
-  { value: SITE.since, label: "Shipping professionally since" },
-  { value: String(SITE.skills.length).padStart(2, "0"), label: "Tools in daily use" },
+const STATS: TerminalStat[] = [
+  { key: "products_shipped", value: String(PROJECTS.length).padStart(2, "0"), label: "Products shipped" },
+  { key: "shipping_since", value: SITE.since, label: "Shipping professionally since" },
+  { key: "tools_in_daily_use", value: String(SITE.skills.length).padStart(2, "0"), label: "Tools in daily use" },
 ];
 
 export function About() {
@@ -16,17 +17,7 @@ export function About() {
       <div className="grid gap-14 lg:grid-cols-[1.25fr_1fr] lg:gap-20">
         <Reveal>
           <p className="font-display text-2xl leading-snug text-ink sm:text-3xl">{SITE.bio}</p>
-          <dl className="mt-12 grid grid-cols-3 gap-4 border-t border-line pt-8">
-            {STATS.map((s) => (
-              <div key={s.label}>
-                <dt className="sr-only">{s.label}</dt>
-                <dd>
-                  <span className="block font-display text-4xl font-semibold text-ink sm:text-5xl">{s.value}</span>
-                  <span className="mt-2 block text-xs leading-snug text-brand sm:text-sm">{s.label}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <StatusTerminal stats={STATS} building={SITE.currentlyBuilding} />
         </Reveal>
 
         <Reveal delayMs={120}>
