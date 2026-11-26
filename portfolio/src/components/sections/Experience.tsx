@@ -1,39 +1,40 @@
 import { Section } from "../ui/Section";
+import { Reveal } from "../ui/Reveal";
 import { EXPERIENCE } from "../../data/experience";
 
-const INTRO =
-  "Roles where I shipped features, improved reliability, and collaborated across design and backend.";
+const INTRO = "Where I ship product for real operators—systems that get used every day.";
 
 export function Experience() {
   return (
-    <Section id="experience" titleId="experience-heading" title="Experience" intro={INTRO}>
-      <ol className="space-y-6 border-l border-white/10 pl-5 sm:space-y-7 sm:pl-6">
-        {EXPERIENCE.map((job) => (
-          <li key={job.id} className="relative">
-            <span
-              className="absolute -left-[21px] top-2.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-brand)] bg-slate-950 sm:-left-[25px] sm:h-3 sm:w-3"
-              aria-hidden
-            />
-            <article className="rounded-xl border border-white/10 bg-white/[0.03] p-5 shadow-md ring-1 ring-white/5 backdrop-blur-sm transition motion-safe:duration-200 motion-safe:hover:border-cyan-400/25 sm:rounded-2xl sm:p-6">
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-white sm:text-lg">
-                    {job.role} <span className="font-normal text-slate-500">· {job.company}</span>
-                  </h3>
-                  {job.context ? (
-                    <p className="mt-1 max-w-prose text-xs leading-relaxed text-slate-500 sm:text-sm">{job.context}</p>
-                  ) : null}
+    <Section id="experience" titleId="experience-heading" index="02" title="Experience" intro={INTRO}>
+      <ol>
+        {EXPERIENCE.map((job, i) => (
+          <li key={job.id} className="border-b border-line last:border-b-0">
+            <Reveal delayMs={i * 90}>
+              <article className="grid gap-6 py-10 md:grid-cols-[13rem_1fr] md:gap-12">
+                <div className="md:sticky md:top-28 md:self-start">
+                  <p className="font-display text-2xl tabular-nums text-ink">{job.period}</p>
+                  <p className="mt-2 text-sm text-brand">{job.company}</p>
                 </div>
-                <time className="shrink-0 text-xs tabular-nums text-cyan-300/90 sm:text-sm">{job.period}</time>
-              </div>
-              <ul className="mt-3 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-slate-400 marker:text-slate-600 sm:mt-4 sm:space-y-2 sm:pl-5">
-                {job.bullets.map((b) => (
-                  <li key={b}>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </article>
+                <div>
+                  <h3 className="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+                    {job.role}
+                  </h3>
+                  {job.context ? <p className="mt-3 text-base text-brand">{job.context}</p> : null}
+                  <ul className="mt-8 space-y-5">
+                    {job.bullets.map((b, j) => (
+                      <li
+                        key={b}
+                        className="grid grid-cols-[2rem_1fr] gap-3 border-t border-line pt-5 text-base leading-relaxed text-ink"
+                      >
+                        <span className="font-mono text-xs tabular-nums text-brand">{String(j + 1).padStart(2, "0")}</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            </Reveal>
           </li>
         ))}
       </ol>

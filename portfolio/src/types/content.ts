@@ -13,10 +13,25 @@ export type ExperienceItem = {
 export type Project = {
   id: string;
   title: string;
+  /** Short card summary. */
   description: string;
+  /** Longer pitch in the product modal. */
+  longDescription?: string;
+  /** What problem it solves / product purpose. */
+  purpose?: string;
+  /** Who the product is for. */
+  audience?: string;
+  /** Social proof line, e.g. who uses it today. */
+  usersNote?: string;
+  /** Product-style selling points. */
+  highlights?: string[];
+  /** Spec rows (label → value). */
+  specs?: { label: string; value: string }[];
   stack: string[];
   href: string;
   repo: string;
-  /** Optional screenshot; if omitted, a gradient + initials tile is shown. */
+  /** Primary screenshot. */
   imageSrc?: string;
+  /** Extra screenshots for the modal gallery (falls back to imageSrc). */
+  gallery?: string[];
 };

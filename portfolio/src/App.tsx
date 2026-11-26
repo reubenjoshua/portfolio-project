@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { SiteLayout } from "./components/layout/SiteLayout";
-import { EditorialShell } from "./components/layout/EditorialShell";
 import { Hero } from "./components/sections/Hero";
-import { About } from "./components/sections/About";
-import { Experience } from "./components/sections/Experience";
 import { Projects } from "./components/sections/Projects";
+import { Experience } from "./components/sections/Experience";
+import { About } from "./components/sections/About";
+import { Contact } from "./components/sections/Contact";
+import { Marquee } from "./components/ui/Marquee";
 import { SITE } from "./data/site";
 
 export default function App() {
@@ -16,12 +17,12 @@ export default function App() {
 
   return (
     <SiteLayout>
-      <EditorialShell>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-      </EditorialShell>
+      <Hero />
+      <Marquee />
+      <Projects />
+      <Experience />
+      <About />
+      <Contact />
     </SiteLayout>
   );
 }

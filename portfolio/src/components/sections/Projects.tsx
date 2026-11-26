@@ -1,82 +1,73 @@
+import { useState } from "react";
+import { HiArrowUpRight } from "react-icons/hi2";
 import { Section } from "../ui/Section";
+import { Reveal } from "../ui/Reveal";
+import { ProjectModal } from "../ui/ProjectModal";
+import { HoverPreview } from "../effects/HoverPreview";
 import { PROJECTS } from "../../data/projects";
 import type { Project } from "../../types/content";
 
-const INTRO =
-  "Webapps I had deployed, Solution for business needs.";
-
-function getInitials(title: string) {
-  const parts = title.trim().split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-  return title.slice(0, 2).toUpperCase();
-}
-
-function ProjectThumb({ project }: { project: Project }) {
-  if (project.imageSrc) {
-    return (
-      <img
-        src={project.imageSrc}
-        alt=""
-        width={640}
-        height={274}
-        className="h-full w-full object-cover"
-      />
-    );
-  }
-  return (
-    <div
-      className="flex h-full min-h-[140px] w-full items-center justify-center bg-gradient-to-br from-cyan-500/15 to-violet-600/20 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white/90"
-      aria-hidden
-    >
-      {getInitials(project.title)}
-    </div>
-  );
-}
+const INTRO = "Products built for real teams. Hover to preview, click for the full breakdown.";
 
 export function Projects() {
+  const [active, setActive] = useState<Project | null>(null);
+  const [hovered, setHovered] = useState<Project | null>(null);
+
+  const open = (p: Project) => {
+    setHovered(null);
+    setActive(p);
+  };
+
   return (
-    <Section id="projects" titleId="projects-heading" title="Projects" intro={INTRO}>
-      <ul className="grid gap-6 sm:grid-cols-2 sm:gap-7 lg:gap-8">
-        {PROJECTS.map((p) => (
-          <li key={p.id}>
-            <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-transparent shadow-lg shadow-slate-950/40 ring-1 ring-white/5 transition motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:border-cyan-400/35 motion-safe:hover:shadow-cyan-500/10">
-              <div className="aspect-[16/9] min-h-[148px] w-full overflow-hidden border-b border-white/10 bg-slate-900/80 sm:min-h-[160px]">
-                <ProjectThumb project={p} />
-              </div>
-              <div className="flex flex-1 flex-col p-5 sm:p-6">
-                <h3 className="text-lg font-semibold tracking-tight text-white sm:text-xl">{p.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400 sm:text-base">{p.description}</p>
-                <ul className="mt-4 flex flex-wrap gap-2" aria-label={`Technologies for ${p.title}`}>
-                  {p.stack.map((t) => (
-                    <li
+    <Section id="work" titleId="work-heading" index="01" title="Selected work" intro={INTRO}>
+      <ul className="group/list" onMouseLeave={() => setHovered(null)}>
+        {PROJECTS.map((p, i) => (
+          <li key={p.id} className="border-b border-line">
+            <Reveal delayMs={i * 80}>
+              <button
+                type="button"
+                data-cursor="View"
+                onMouseEnter={() => setHovered(p)}
+                onClick={() => open(p)}
+                className="group/row grid w-full grid-cols-[2.5rem_1fr_auto] items-center gap-4 py-8 text-left transition-opacity duration-300 group-hover/list:[&:not(:hover)]:opacity-40 sm:grid-cols-[3.5rem_1fr_15rem_2.5rem] sm:py-10"
+              >
+                <span className="self-start pt-3 font-mono text-xs tabular-nums text-brand">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-display text-3xl font-semibold leading-tight tracking-tight text-ink transition-transform duration-500 ease-out group-hover/row:translate-x-3 sm:text-5xl">
+                    {p.title}
+                  </span>
+                  <span className="mt-3 block max-w-xl text-sm leading-relaxed text-brand sm:text-base">
+                    {p.description}
+                  </span>
+                  {p.imageSrc ? (
+                    <span className="mt-5 block overflow-hidden rounded-xl border border-line md:hidden">
+                      <img src={p.imageSrc} alt="" className="aspect-[16/10] w-full object-cover object-top" />
+                    </span>
+                  ) : null}
+                </span>
+                <span className="hidden flex-wrap justify-end gap-1.5 sm:flex">
+                  {p.stack.slice(0, 3).map((t) => (
+                    <span
                       key={t}
-                      className="rounded-md border border-white/5 bg-slate-900/80 px-2 py-0.5 text-xs font-medium text-[var(--color-brand)]"
+                      className="rounded-full border border-line px-2.5 py-0.5 text-[11px] font-medium text-ink"
                     >
                       {t}
-                    </li>
+                    </span>
                   ))}
-                </ul>
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <a
-                    href={p.href}
-                    className="text-sm font-semibold text-[var(--color-brand)] transition hover:text-[var(--color-brand-hover)]"
-                  >
-                    Live demo →
-                  </a>
-                  <a
-                    href={p.repo}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="text-sm font-semibold text-slate-400 transition hover:text-white"
-                  >
-                    Source →
-                  </a>
-                </div>
-              </div>
-            </article>
+                </span>
+                <span className="grid h-10 w-10 place-items-center justify-self-end rounded-full border border-line text-ink transition-all duration-300 group-hover/row:rotate-45 group-hover/row:border-ink group-hover/row:bg-ink group-hover/row:text-cream">
+                  <HiArrowUpRight className="h-4 w-4" aria-hidden />
+                </span>
+              </button>
+            </Reveal>
           </li>
         ))}
       </ul>
+
+      <HoverPreview src={hovered?.imageSrc} visible={Boolean(hovered) && !active} />
+      <ProjectModal project={active} onClose={() => setActive(null)} />
     </Section>
   );
 }

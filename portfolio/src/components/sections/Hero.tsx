@@ -1,89 +1,121 @@
 import { SITE } from "../../data/site";
+import { Magnetic } from "../effects/Magnetic";
+import { TiltCard } from "../effects/TiltCard";
+import { LocalTime } from "../ui/LocalTime";
+import { RotatingBadge } from "../ui/RotatingBadge";
+
+function SplitWord({ word, delayMs = 0 }: { word: string; delayMs?: number }) {
+  return (
+    <span className="letter-mask" aria-hidden>
+      {[...word].map((ch, i) => (
+        <span key={i} className="letter" style={{ animationDelay: `${delayMs + i * 45}ms` }}>
+          {ch}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** WebKit (Safari, and every iOS browser) renders VP9 alpha with a black backdrop. */
+function canPlayAlphaWebm() {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (ua.includes("Mac") && navigator.maxTouchPoints > 1);
+  const isSafari = /^((?!chrome|chromium|android|edg|crios|fxios).)*safari/i.test(ua);
+  return !isIOS && !isSafari;
+}
 
 export function Hero() {
-  return (
-    <section id="top" className="pb-16 pt-6 sm:pb-20 sm:pt-10">
-      <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[minmax(0,1fr)_min(40%,240px)] md:gap-x-8 lg:gap-x-10">
-        <div>
-          <header className="text-center md:text-left">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-              Issue № 01 · {new Date().getFullYear()}
-            </p>
-            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
-              {SITE.heroLead}
-            </p>
-            <h1 className="mt-6 font-[family-name:var(--font-display)] text-3xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-4xl lg:text-[2.75rem]">
-              Hi, I&apos;m{" "}
-              <span className="bg-gradient-to-r from-[var(--color-brand)] via-sky-400 to-[var(--color-accent)] bg-clip-text text-transparent">
-                {SITE.name}
-              </span>
-              <br />
-              {SITE.tagline}
-            </h1>
-            <p className="mx-auto mt-6 max-w-prose text-base leading-relaxed text-slate-400 sm:text-lg md:mx-0">
-              {SITE.heroSummary}
-            </p>
-            <div
-              className="mx-auto mt-8 h-px max-w-xs bg-gradient-to-r from-transparent via-white/20 to-transparent md:mx-0"
-              aria-hidden
-            />
-          </header>
+  const [firstName, ...rest] = SITE.fullName.split(" ");
+  const lastName = rest.join(" ");
 
-          <div className="mt-10 flex flex-wrap justify-center gap-3 md:justify-start">
-            <a
-              href="#projects"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-cyan-400/35 bg-transparent px-6 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/55 hover:bg-cyan-400/10"
-            >
-              View projects
-            </a>
-            <a
-              href={SITE.github}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 text-sm font-semibold text-white transition motion-safe:duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:bg-white/10"
-            >
-              GitHub
-            </a>
-            {SITE.linkedin ? (
-              <a
-                href={SITE.linkedin}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 text-sm font-semibold text-white transition motion-safe:duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:bg-white/10"
-              >
-                LinkedIn
-              </a>
-            ) : null}
-            {SITE.resumeUrl ? (
-              <a
-                href={SITE.resumeUrl}
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 text-sm font-semibold text-white transition motion-safe:duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:bg-white/10"
-                download={SITE.resumeDownloadFilename || true}
-              >
-                Download CV
-              </a>
-            ) : null}
+  return (
+    <section id="top" aria-label="Introduction" className="relative">
+      <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-4 pb-10 pt-24 sm:px-6 lg:px-10">
+        <div className="fade-in flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-brand">
+          <span>{SITE.role}</span>
+          <span className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-60 motion-reduce:animate-none" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
+            </span>
+            Available for work
+          </span>
+          <span>
+            {SITE.location} · <LocalTime timeZone={SITE.timeZone} />
+          </span>
+        </div>
+
+        <div className="mt-10 grid flex-1 items-center gap-12 lg:grid-cols-[1fr_auto]">
+          <h1 className="font-display text-[clamp(4rem,14vw,10.5rem)] font-semibold leading-[0.88] tracking-[-0.03em] text-ink">
+            <span className="sr-only">
+              {SITE.fullName}, {SITE.role}
+            </span>
+            <span className="block">
+              <SplitWord word={firstName} />
+            </span>
+            <span className="block pl-[10vw] font-serif font-normal italic tracking-[-0.01em] text-brand lg:pl-28">
+              <SplitWord word={`${lastName}.`} delayMs={280} />
+            </span>
+          </h1>
+
+          <div className="fade-in relative justify-self-center lg:justify-self-end" style={{ animationDelay: "500ms" }}>
+            <TiltCard className="w-80 sm:w-[26rem]" glare={false}>
+              <div className="relative aspect-square">
+                <div
+                  className="float-shadow absolute bottom-[9%] left-1/2 h-8 w-3/4 -translate-x-1/2 rounded-[50%] bg-black/30 blur-xl"
+                  aria-hidden
+                />
+                <div className="float-soft absolute inset-0">
+                  {SITE.heroVideoSrc && canPlayAlphaWebm() ? (
+                    <video
+                      className="h-full w-full object-contain"
+                      src={SITE.heroVideoSrc}
+                      poster={SITE.heroCutoutSrc}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-label={SITE.heroVideoAlt}
+                    />
+                  ) : (
+                    <img src={SITE.heroCutoutSrc} alt={SITE.heroVideoAlt} className="h-full w-full object-contain" />
+                  )}
+                </div>
+              </div>
+            </TiltCard>
+            <RotatingBadge
+              href="#work"
+              text="Scroll to work · Scroll to work · "
+              className="absolute bottom-4 -left-4 h-24 w-24 border border-line shadow-md sm:h-28 sm:w-28"
+            />
           </div>
         </div>
 
-        <figure className="relative mx-auto w-full max-w-[280px] justify-self-center md:mx-0 md:max-w-none md:justify-self-end">
-          <div
-            className="pointer-events-none absolute -inset-4 rounded-[1.75rem] bg-gradient-to-br from-cyan-500/25 via-violet-500/15 to-blue-600/20 blur-xl"
-            aria-hidden
-          />
-          <div className="relative rounded-3xl bg-gradient-to-br from-[var(--color-brand)]/70 via-[var(--color-accent)]/50 to-sky-500/60 p-px shadow-xl">
-            <div className="overflow-hidden rounded-[calc(1.5rem-1px)] bg-slate-950 p-2">
-              <img
-                src={SITE.profileImageSrc}
-                alt={SITE.profileImageAlt}
-                width={480}
-                height={480}
-                className="aspect-square w-full rounded-2xl object-cover ring-1 ring-white/10"
-              />
-            </div>
+        <div className="mt-16 grid gap-8 border-t border-line pt-8 md:grid-cols-[1fr_auto] md:items-end">
+          <div className="fade-in" style={{ animationDelay: "700ms" }}>
+            <p className="max-w-xl font-display text-2xl leading-snug text-ink sm:text-3xl">{SITE.tagline}</p>
+            <p className="mt-3 max-w-lg text-base leading-relaxed text-brand">{SITE.heroSummary}</p>
           </div>
-          <figcaption className="sr-only">Profile photo of {SITE.name}</figcaption>
-        </figure>
+          <div className="fade-in flex flex-wrap gap-3" style={{ animationDelay: "850ms" }}>
+            <Magnetic>
+              <a
+                href="#work"
+                className="inline-flex h-12 items-center rounded-full bg-ink px-6 text-sm font-medium text-cream transition-colors hover:bg-brand-hover"
+              >
+                See selected work
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href="#contact"
+                className="inline-flex h-12 items-center rounded-full border border-ink/30 px-6 text-sm font-medium text-ink transition-colors hover:bg-blush/50"
+              >
+                Let&apos;s talk
+              </a>
+            </Magnetic>
+          </div>
+        </div>
       </div>
     </section>
   );

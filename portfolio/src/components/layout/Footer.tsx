@@ -1,47 +1,36 @@
-import { SITE } from "../../data/site";
+import { SITE, NAV_LINKS } from "../../data/site";
+import { LocalTime } from "../ui/LocalTime";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-slate-950/85 py-12 text-center text-sm text-slate-500">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-        <nav aria-label="Social and contact" className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-        <a
-          href={`mailto:${SITE.email}`}
-          className="text-slate-400 transition-colors hover:text-[var(--color-brand-hover)]"
-        >
-          Email
-        </a>
-        <a
-          href={SITE.github}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="text-slate-400 transition-colors hover:text-[var(--color-brand-hover)]"
-        >
-          GitHub
-        </a>
-        {SITE.linkedin ? (
-          <a
-            href={SITE.linkedin}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="text-slate-400 transition-colors hover:text-[var(--color-brand-hover)]"
-          >
-            LinkedIn
-          </a>
-        ) : null}
-        {SITE.resumeUrl ? (
-          <a
-            href={SITE.resumeUrl}
-            className="text-slate-400 transition-colors hover:text-[var(--color-brand-hover)]"
-            download={SITE.resumeDownloadFilename || true}
-          >
-            Download CV
-          </a>
-        ) : null}
-        </nav>
-        <p className="mt-8">
-          © {new Date().getFullYear()} {SITE.name}. Built with React, Vite, TypeScript &amp; Tailwind.
-        </p>
+    <footer className="bg-ink text-cream">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
+        <div className="grid gap-8 border-t border-cream/15 py-10 text-sm sm:grid-cols-3 sm:items-center">
+          <p className="text-cream/70">
+            © {new Date().getFullYear()} {SITE.fullName}
+          </p>
+
+          <nav aria-label="Footer">
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 sm:justify-center">
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="text-cream/70 transition-colors hover:text-cream">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-6 text-cream/70 sm:justify-end">
+            <span>
+              {SITE.location} · <LocalTime timeZone={SITE.timeZone} />
+            </span>
+            <a href="#top" className="transition-colors hover:text-cream">
+              Back to top ↑
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );

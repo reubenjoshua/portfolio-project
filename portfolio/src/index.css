@@ -1,33 +1,200 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Outfit", system-ui, sans-serif;
-  --font-body: "DM Sans", system-ui, sans-serif;
-  --color-brand: #22d3ee;
-  --color-brand-hover: #67e8f9;
-  --color-accent: #a78bfa;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", "Times New Roman", serif;
+  --font-body: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  /* Blue, blush & cream — light defaults */
+  --color-ink: #3d5363;
+  --color-brand: #5e7a8c;
+  --color-brand-hover: #4a6575;
+  --color-blush: #e8d5c4;
+  --color-cream: #f4f1eb;
+  --color-mist: #c5c9d1;
+  --color-paper: #faf8f5;
+  --color-line: #d5d0c8;
+  --color-glow-a: rgba(232, 213, 196, 0.55);
+  --color-glow-b: rgba(197, 201, 209, 0.35);
+}
+
+/* Same palette, inverted for night — deep slate + soft blush accents */
+html[data-theme="dark"] {
+  --color-ink: #f0ebe3;
+  --color-brand: #a8b8c4;
+  --color-brand-hover: #c5c9d1;
+  --color-blush: #6d5a4e;
+  --color-cream: #1a222b;
+  --color-mist: #4a5560;
+  --color-paper: #232c36;
+  --color-line: #3a4552;
+  --color-glow-a: rgba(109, 90, 78, 0.35);
+  --color-glow-b: rgba(94, 122, 140, 0.22);
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
 body {
   font-family: var(--font-body);
-  @apply antialiased text-slate-100 bg-slate-950;
+  @apply antialiased;
+  color: var(--color-ink);
+  background-color: var(--color-cream);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 ::selection {
-  background-color: rgb(34 211 238 / 0.22);
-  color: inherit;
+  background-color: color-mix(in srgb, var(--color-blush) 70%, transparent);
+  color: var(--color-ink);
 }
 
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-[var(--color-brand)];
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.custom-cursor,
+  html.custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* Hero name: each letter rises out of a mask */
+.letter-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0 0.06em 0.1em 0;
+  vertical-align: bottom;
+}
+
+.letter {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: letter-rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes letter-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fade-in 0.8s ease forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Marquee: track holds two copies, so -50% lands on a seamless loop */
+.marquee-track {
+  animation: marquee 36s linear infinite;
+}
+
+.marquee-reverse {
+  animation-direction: reverse;
+  animation-duration: 44s;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.spin-slow {
+  animation: spin 16s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+@keyframes float-soft {
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* Ground shadow shrinks as the character rises */
+.float-shadow {
+  animation: float-shadow 6s ease-in-out infinite;
+}
+
+@keyframes float-shadow {
+  50% {
+    transform: scale(0.8);
+    opacity: 0.55;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  html.custom-cursor,
+  html.custom-cursor * {
+    cursor: auto !important;
+  }
+
+  .letter,
+  .fade-in,
+  .reveal {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+
+  .marquee-track,
+  .spin-slow,
+  .float-soft,
+  .float-shadow {
+    animation: none;
+  }
 }
